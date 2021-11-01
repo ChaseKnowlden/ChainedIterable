@@ -80,7 +80,8 @@ _GroupByTU = Tuple[_U, Iterator[_T]]
 if VERSION in {Version.py36, Version.py37}:
 
     def _accumulate(
-        self: "ChainedIterable[_T]", func: Callable[[_T, _T], _T] = add,
+        self: "ChainedIterable[_T]",
+        func: Callable[[_T, _T], _T] = add,
     ) -> "ChainedIterable[_T]":
         return self.pipe(accumulate, func, index=0)
 
@@ -174,7 +175,8 @@ class ChainedIterable(Iterable[_T]):
         return self.pipe(enumerate, start=start, index=0)
 
     def filter(
-        self, func: Optional[Callable[[_T], bool]],
+        self,
+        func: Optional[Callable[[_T], bool]],
     ) -> "ChainedIterable[_T]":
         return self.pipe(filter, func, index=1)
 
@@ -185,7 +187,9 @@ class ChainedIterable(Iterable[_T]):
         return list(self._iterable)
 
     def map(
-        self, func: Callable[..., _U], *iterables: Iterable,
+        self,
+        func: Callable[..., _U],
+        *iterables: Iterable,
     ) -> "ChainedIterable[_U]":
         return self.pipe(map, func, *iterables, index=1)
 
@@ -283,7 +287,9 @@ class ChainedIterable(Iterable[_T]):
         **kwargs: Any,
     ) -> "ChainedIterable[_U]":
         new_args = chain(
-            islice(args, index), [self._iterable], islice(args, index, None),
+            islice(args, index),
+            [self._iterable],
+            islice(args, index, None),
         )
         return type(self)(func(*new_args, **kwargs))
 
@@ -318,14 +324,17 @@ class ChainedIterable(Iterable[_T]):
 
     @classmethod
     def repeat(
-        cls, x: _T, times: Optional[int] = None,
+        cls,
+        x: _T,
+        times: Optional[int] = None,
     ) -> "ChainedIterable[_T]":
         return cls(repeat(x, times=times))
 
     accumulate = _accumulate
 
     def chain(
-        self, *iterables: Iterable[_U],
+        self,
+        *iterables: Iterable[_U],
     ) -> "ChainedIterable[Union[_T,_U]]":
         return self.pipe(chain, *iterables, index=0)
 
@@ -333,17 +342,20 @@ class ChainedIterable(Iterable[_T]):
         return self.pipe(compress, selectors, index=0)
 
     def dropwhile(
-        self, func: Callable[[_T], bool],
+        self,
+        func: Callable[[_T], bool],
     ) -> "ChainedIterable[Tuple[_T]]":
         return self.pipe(dropwhile, func, index=0)
 
     def filterfalse(
-        self, func: Callable[[_T], bool],
+        self,
+        func: Callable[[_T], bool],
     ) -> "ChainedIterable[Tuple[_T]]":
         return self.pipe(filterfalse, func, index=0)
 
     def groupby(
-        self, key: Optional[Callable[[_T], _U]] = None,
+        self,
+        key: Optional[Callable[[_T], _U]] = None,
     ) -> "ChainedIterable[_GroupByTU]":
         return self.pipe(groupby, key=key, index=0)
 
@@ -363,17 +375,22 @@ class ChainedIterable(Iterable[_T]):
         return self.pipe(tee, n=n, index=0)
 
     def zip_longest(
-        self, *iterables: Iterable, fillvalue: Any = None,
+        self,
+        *iterables: Iterable,
+        fillvalue: Any = None,
     ) -> "ChainedIterable[Iterable[Tuple]]":
         return self.pipe(zip_longest, *iterables, fillvalue=fillvalue, index=0)
 
     def product(
-        self, *iterables: Iterable, repeat: int = 1,
+        self,
+        *iterables: Iterable,
+        repeat: int = 1,
     ) -> "ChainedIterable[_T]":
         return self.pipe(product, *iterables, repeat=repeat, index=0)
 
     def permutations(
-        self, r: Optional[int] = None,
+        self,
+        r: Optional[int] = None,
     ) -> "ChainedIterable[Tuple[_T]]":
         return self.pipe(permutations, r=r, index=0)
 
@@ -381,7 +398,8 @@ class ChainedIterable(Iterable[_T]):
         return self.pipe(combinations, r, index=0)
 
     def combinations_with_replacement(
-        self, r: int,
+        self,
+        r: int,
     ) -> "ChainedIterable[Tuple[_T]]":
         return self.pipe(combinations_with_replacement, r, index=0)
 
@@ -395,7 +413,9 @@ class ChainedIterable(Iterable[_T]):
 
     @classmethod
     def tabulate(
-        cls, func: Callable[[int], _T], start: int = 0,
+        cls,
+        func: Callable[[int], _T],
+        start: int = 0,
     ) -> "ChainedIterable[_T]":
         return cls(tabulate(func, start=start))
 
@@ -428,7 +448,10 @@ class ChainedIterable(Iterable[_T]):
 
     @classmethod
     def repeatfunc(
-        cls, func: Callable[..., _T], times: Optional[int] = None, *args: Any,
+        cls,
+        func: Callable[..., _T],
+        times: Optional[int] = None,
+        *args: Any,
     ) -> "ChainedIterable[_T]":
         return cls(repeatfunc(func, times=times, *args))
 
@@ -436,12 +459,15 @@ class ChainedIterable(Iterable[_T]):
         return self.pipe(pairwise, index=0)
 
     def grouper(
-        self, n: int, fillvalue: Optional[_T] = None,
+        self,
+        n: int,
+        fillvalue: Optional[_T] = None,
     ) -> "ChainedIterable[Tuple[_T,...]]":
         return self.pipe(grouper, n, fillvalue=fillvalue, index=0)
 
     def partition(
-        self, func: Callable[[_T], bool],
+        self,
+        func: Callable[[_T], bool],
     ) -> Tuple["ChainedIterable[_T]", "ChainedIterable[_T]"]:
         return self.pipe(partition, func, index=1).map(type(self)).tuple()
 
@@ -452,12 +478,14 @@ class ChainedIterable(Iterable[_T]):
         return self.pipe(roundrobin, *iterables, index=0)
 
     def unique_everseen(
-        self, key: Optional[Callable[[_T], Any]] = None,
+        self,
+        key: Optional[Callable[[_T], Any]] = None,
     ) -> "ChainedIterable[_T]":
         return self.pipe(unique_everseen, key=key, index=0)
 
     def unique_justseen(
-        self, key: Optional[Callable[[_T], Any]] = None,
+        self,
+        key: Optional[Callable[[_T], Any]] = None,
     ) -> "ChainedIterable[_T]":
         return self.pipe(unique_justseen, key=key, index=0)
 
@@ -478,7 +506,9 @@ class ChainedIterable(Iterable[_T]):
         return first_true(self._iterable, default=default, pred=pred)
 
     def random_product(
-        self, *iterables: Iterable, repeat: int = 1,
+        self,
+        *iterables: Iterable,
+        repeat: int = 1,
     ) -> Tuple[_T, ...]:
         return random_product(self._iterable, *iterables, repeat=repeat)
 
