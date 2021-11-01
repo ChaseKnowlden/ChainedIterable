@@ -1,6 +1,6 @@
 repos:
 - repo: https://github.com/psf/black
-  rev: 19.10b0
+  rev: 21.10b0
   hooks:
   - id: black
 - repo: https://github.com/humitos/mirrors-autoflake
@@ -13,22 +13,22 @@ repos:
       --remove-unused-variable,
     ]
 - repo: https://github.com/asottile/add-trailing-comma
-  rev: v1.5.0
+  rev: v2.2.0
   hooks:
   - id: add-trailing-comma
     args: [--py36-plus]
 - repo: https://github.com/asottile/pyupgrade
-  rev: v1.26.2
+  rev: v2.29.0
   hooks:
   - id: pyupgrade
     args: [--py37-plus]
 - repo: https://github.com/asottile/reorder_python_imports
-  rev: v1.9.0
+  rev: v2.6.0
   hooks:
   - id: reorder-python-imports
     args: [--py37-plus]
 - repo: https://github.com/PyCQA/flake8
-  rev: 3.7.9
+  rev: 4.0.1
   hooks:
   - id: flake8
     additional_dependencies: [
@@ -42,7 +42,7 @@ repos:
       wemake-python-styleguide,
     ]
 - repo: https://github.com/pre-commit/pre-commit-hooks
-  rev: v2.4.0
+  rev: v4.0.1
   hooks:
   - id: end-of-file-fixer
   - id: mixed-line-ending
