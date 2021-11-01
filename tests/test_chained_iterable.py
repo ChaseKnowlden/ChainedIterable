@@ -102,7 +102,8 @@ def test_init(input_: Union[int, List[int]]) -> None:
 @given(ints=lists(integers()), other=integers() | lists(integers()))
 def test_eq(ints: List[int], other: Union[int, List[int]]) -> None:
     _assert_same_type_and_equal(
-        ChainedIterable(iter(ints)) == other, ints == other,
+        ChainedIterable(iter(ints)) == other,
+        ints == other,
     )
 
 
@@ -112,7 +113,8 @@ def test_get_item(ints: List[int], index: int) -> None:
     num_ints = len(ints)
     if index < 0:
         with raises(
-            IndexError, match=f"Expected a non-negative index; got {index}",
+            IndexError,
+            match=f"Expected a non-negative index; got {index}",
         ):
             iterable[index]
     elif 0 <= index < num_ints:
@@ -159,7 +161,8 @@ def test_all(bools: List[bool]) -> None:
 @given(mapping=dictionaries(integers(), integers()))
 def test_dict(mapping: Dict[int, int]) -> None:
     _assert_same_type_and_equal(
-        ChainedIterable(mapping.items()).dict(), mapping,
+        ChainedIterable(mapping.items()).dict(),
+        mapping,
     )
 
 
@@ -180,10 +183,12 @@ def test_filter(ints: List[int], func: Callable[[int], bool]) -> None:
 @given(ints=lists(integers()))
 @mark.parametrize("func", [frozenset, list, set, tuple])
 def test_frozenset_and_list_and_set_and_tuple(
-    ints: List[int], func: Callable[[Iterable[int]], Iterable[int]],
+    ints: List[int],
+    func: Callable[[Iterable[int]], Iterable[int]],
 ) -> None:
     _assert_same_type_and_equal(
-        getattr(ChainedIterable(iter(ints)), func.__name__)(), func(ints),
+        getattr(ChainedIterable(iter(ints)), func.__name__)(),
+        func(ints),
     )
 
 
@@ -226,7 +231,8 @@ def test_max_and_min(
             func(ints, **key_kwargs, **default_kwargs)
     else:
         _assert_same_type_and_equal(
-            res, func(ints, **key_kwargs, **default_kwargs),
+            res,
+            func(ints, **key_kwargs, **default_kwargs),
         )
 
 
@@ -236,7 +242,9 @@ def test_max_and_min(
     step=integers(-1000, 1000).filter(lambda x: x != 0) | just(sentinel),
 )
 def test_range(
-    start: int, stop: Union[int, Sentinel], step: Union[int, Sentinel],
+    start: int,
+    stop: Union[int, Sentinel],
+    step: Union[int, Sentinel],
 ) -> None:
     if step is sentinel:
         assume(stop is not sentinel)
@@ -255,7 +263,9 @@ def test_reversed(ints: List[int]) -> None:
 
 @given(ints=lists(integers()), key=_int_to_any_funcs(), reverse=booleans())
 def test_sorted(
-    ints: List[int], key: Optional[Callable[[int], Any]], reverse: bool,
+    ints: List[int],
+    key: Optional[Callable[[int], Any]],
+    reverse: bool,
 ) -> None:
     _assert_same_type_and_equal(
         ChainedIterable(iter(ints)).sorted(key=key, reverse=reverse),
@@ -264,16 +274,19 @@ def test_sorted(
 
 
 @given(
-    ints=lists(integers()), args=just(()) | tuples(integers()),
+    ints=lists(integers()),
+    args=just(()) | tuples(integers()),
 )
 def test_sum(ints: List[int], args: Tuple[str, ...]) -> None:
     _assert_same_type_and_equal(
-        ChainedIterable(iter(ints)).sum(*args), sum(ints, *args),
+        ChainedIterable(iter(ints)).sum(*args),
+        sum(ints, *args),
     )
 
 
 @given(
-    ints=lists(integers()), iterables=lists(lists(integers())),
+    ints=lists(integers()),
+    iterables=lists(lists(integers())),
 )
 def test_zip(ints: List[int], iterables: List[List[int]]) -> None:
     iterable = ChainedIterable(iter(ints)).zip(*iterables)
@@ -358,7 +371,8 @@ def test_reduce(
             reduce(func, ints, *initial_args)
     else:
         _assert_same_type_and_equal(
-            res, reduce(func, ints, *initial_args),
+            res,
+            reduce(func, ints, *initial_args),
         )
 
 
@@ -366,7 +380,9 @@ def test_reduce(
 
 
 @given(
-    start=integers(), step=integers(), length=integers(0, 1000),
+    start=integers(),
+    step=integers(),
+    length=integers(0, 1000),
 )
 def test_count(start: int, step: int, length: int) -> None:
     iterable = ChainedIterable.count(start=start, step=step)
